@@ -1,5 +1,5 @@
 
-import ConfigParser
+#import configParser
 import subprocess
 import psycopg2
 import glob

@@ -78,10 +78,10 @@ class TurkerResults:
             assignments = self.MTconnection.get_assignments(hit.HITId)
             assignmentpay = self.assignment_payout(assignments, float(hit.Amount))
             maxtotalspent += assignmentpay
-            print "{} - {} - {} - Expired: {} Keywords: {} #Assignments: {}".format(hit.CreationTime, hit.HITStatus, hit.HITReviewStatus, hit.expired, hit.Keywords, len(assignments))
+            #print "{} - {} - {} - Expired: {} Keywords: {} #Assignments: {}".format(hit.CreationTime, hit.HITStatus, hit.HITReviewStatus, hit.expired, hit.Keywords, len(assignments))
             totassignments += len(assignments)
-        print ''
-        print "Total: #HIT: {}, #Assignments: {} TotalMaxSpent: {}".format(len(all_hits), totassignments, maxtotalspent)
+        #print ''
+        #print "Total: #HIT: {}, #Assignments: {} TotalMaxSpent: {}".format(len(all_hits), totassignments, maxtotalspent)
 
     def log_worker(self, worker_base, worker_bonus, worker_solves, difficulty_solves, assignment, bonuses, hit):
         wid = assignment.WorkerId
@@ -116,14 +116,14 @@ class TurkerResults:
             for assignment in assignments:
                 if assignment.AssignmentStatus == 'Approved':
                     self.log_worker(worker_base, worker_bonus, worker_solves, difficulty_solves, assignment, bonuses, hit)
-        print "Worker Base:"
-        print json.dumps(worker_base, sort_keys=True, indent=4, separators=(',', ': ') )
-        print "Worker Bonus:"
-        print json.dumps(worker_bonus, sort_keys=True, indent=4, separators=(',', ': ') )
-        print "Worker Solves:"
-        print json.dumps(worker_solves, sort_keys=True, indent=4, separators=(',', ': ') )
-        print "By Difficulty:"
-        print json.dumps(difficulty_solves, sort_keys=True, indent=4, separators=(',', ': ') )
+        #print "Worker Base:"
+        #print json.dumps(worker_base, sort_keys=True, indent=4, separators=(',', ': ') )
+        #print "Worker Bonus:"
+        #print json.dumps(worker_bonus, sort_keys=True, indent=4, separators=(',', ': ') )
+        #print "Worker Solves:"
+        #print json.dumps(worker_solves, sort_keys=True, indent=4, separators=(',', ': ') )
+        #print "By Difficulty:"
+        #print json.dumps(difficulty_solves, sort_keys=True, indent=4, separators=(',', ': ') )
         return
 
 
@@ -147,7 +147,7 @@ class TurkerResults:
 
         for hit in all_hits:
             if not hit.CreationTime.startswith(EXPERIMENT_START):
-                print 'old hit!'
+                #print 'old hit!'
                 continue
             if hit.NumberOfAssignmentsCompleted == 0:
                 continue
@@ -174,7 +174,7 @@ class TurkerResults:
                         if not tkey in tasklet_hit_done:
                             worker_solvedifficulty[assignment.WorkerId][tasklet['keywords']] += 1
                             tasklet_hit_done.add(tkey)
-                            print 'Approved: {}'.format(tkey)
+                            #print 'Approved: {}'.format(tkey)
 
                     if hit.HITReviewStatus == 'NotReviewed':
                         if not assignment.AssignmentStatus == 'Submitted':
@@ -184,27 +184,29 @@ class TurkerResults:
                         try:
                             money = taskid_earnings[tid][assignment.WorkerId]
                         except Exception as e:
-                            print '{} error'.format(tasklet['type'])
+                            #print '{} error'.format(tasklet['type'])
                             continue
 
                         if money['payout'] < money['amount']:
-                            print 'Possible reject: {}'.format(money['payout'])
+                            pass
+                            #print 'Possible reject: {}'.format(money['payout'])
                             # TODO - uncomment this to actually reject a task
                             #self.MTconnection.reject_assignment(assignment.AssignmentId)
                         if money['payout'] >= money['amount']:
                             self.MTconnection.approve_assignment(assignment.AssignmentId, feedback = "Thanks for participating, more similar tasks coming soon")
                             pass
                     else:
-                        print 'else: {}'.format(hit.HITReviewStatus)
+                        #print 'else: {}'.format(hit.HITReviewStatus)
+                        pass
 
 
                     worker_solvecount[assignment.WorkerId]+= float(hit.Amount)
-        pprint (sorted(worker_solvecount.items(), key=operator.itemgetter(1)))
-        print "worker_solvecount"
-        print json.dumps(worker_solvecount, sort_keys=True, indent=4, separators=(',', ': ') )
-        print "worker_solvedifficulty"
-        print json.dumps(worker_solvedifficulty, sort_keys=True, indent=4, separators=(',', ': ') )
-        print "Solved: {}, total payout: {}".format(solved, sum(worker_solvecount.values()))
+        #pprint (sorted(worker_solvecount.items(), key=operator.itemgetter(1)))
+        #print "worker_solvecount"
+        #print json.dumps(worker_solvecount, sort_keys=True, indent=4, separators=(',', ': ') )
+        #print "worker_solvedifficulty"
+        #print json.dumps(worker_solvedifficulty, sort_keys=True, indent=4, separators=(',', ': ') )
+        #print "Solved: {}, total payout: {}".format(solved, sum(worker_solvecount.values()))
 
     def split_composite_key(self, k):
         # "{}-{}-{}-{}".format(taskid, hitid, assignmentid, workerid)
@@ -291,13 +293,13 @@ class TurkerResults:
 
                 pass
 
-        print 'Total seed BASE payment: $ {}'.format(total_payout_base)
-        print 'Total seed BONUS payment: $ {}'.format(total_payout_bonus)
-        print 'Workers solving at least one SEED Task: {}'.format(len(unique_seed_workers))
-        print 'Number of solved SEED tasks: {}'.format(len(tasklet_solved))
-        print 'Number of tasklets by difficulty: {}'.format(tasklet_difficulty)
-        print 'Busiest worker: {} solves'.format(max(worker_solves.values()))
-        print 'Average worker throughput: {} solves'.format(round(sum(worker_solves.values())  / float(len(worker_solves.values())), 2))
+        #print 'Total seed BASE payment: $ {}'.format(total_payout_base)
+        #print 'Total seed BONUS payment: $ {}'.format(total_payout_bonus)
+        #print 'Workers solving at least one SEED Task: {}'.format(len(unique_seed_workers))
+        #print 'Number of solved SEED tasks: {}'.format(len(tasklet_solved))
+        #print 'Number of tasklets by difficulty: {}'.format(tasklet_difficulty)
+        #print 'Busiest worker: {} solves'.format(max(worker_solves.values()))
+        #print 'Average worker throughput: {} solves'.format(round(sum(worker_solves.values())  / float(len(worker_solves.values())), 2))
         pdb.set_trace()
 
     def get_solve_ratio(self):
@@ -324,7 +326,7 @@ class TurkerResults:
                     metadata = self.split_composite_key(jfile.split(os.path.sep)[jfile.split(os.path.sep).index('result.json')-1])
                 # fake keys
                 except Exception as e:
-                    print e
+                    #print e
                     continue
                 # that's us
                 if metadata['workerid'] == 'A2PRAI0ABXN99X':
@@ -333,7 +335,7 @@ class TurkerResults:
                 tasklet = self.db.get_full_tasklet(metadata['tid'])
 
                 if tasklet == None:
-                    print "No tasklet for program {}".format(tasklet['program'])
+                    #print "No tasklet for program {}".format(tasklet['program'])
                     continue
 
                 if tasklet['type'] == 'SEED':
@@ -367,8 +369,8 @@ class TurkerResults:
                     taskid_earnings[metadata['tid']][metadata['workerid']] = {}
 
                 taskid_earnings[metadata['tid']][metadata['workerid']] = {'payout': payout, 'amount': tasklet['amount']}
-        print "Goal reached: {}, Goal not reached: {}". format(goalreached, goalnotreached)
-        print "taskid_earnings"
+        #print "Goal reached: {}, Goal not reached: {}". format(goalreached, goalnotreached)
+        #print "taskid_earnings"
         pprint(taskid_earnings)
 
         return taskid_earnings, prog_maxcoverage, seed_taskletid_solved
@@ -386,7 +388,7 @@ class TurkerResults:
             self.MTconnection.grant_bonus(wid, aid, Price(price), reason)
             return True
         except Exception as e:
-            print "Not issued for whatever reason: {}".format(e)
+            #print "Not issued for whatever reason: {}".format(e)
             return False
 
     def bonus_paid_before(self, tid, wid, aid):
@@ -409,7 +411,7 @@ class TurkerResults:
                     metadata = self.split_composite_key(xkey)
                 except Exception as e:
                     #pdb.set_trace()
-                    print 'Skipping {}'.format(e)
+                    #print 'Skipping {}'.format(e)
                     continue
                 if metadata['workerid'] == 'A2PRAI0ABXN99X':
                     continue
@@ -421,7 +423,7 @@ class TurkerResults:
                     continue
 
                 if tasklet['type'] != 'SEED':
-                    print "We only pay a bonus for SEEDing"
+                    #print "We only pay a bonus for SEEDing"
                     continue
 
                 if money['payout'] > money['amount']:
@@ -432,15 +434,17 @@ class TurkerResults:
 
 
                     if self.bonus_paid_before(str(tasklet['id']), metadata['workerid'], metadata['aid']):
-                        print 'paid before - skip'
+                        #print 'paid before - skip'
+                        pass
                     else:
-                        print 'Bonus payout: {}'.format(bonus)
+                        pass
+                        #print 'Bonus payout: {}'.format(bonus)
                         # TODO...
                         #if self.do_pay_bonus(str(tasklet['id']), metadata['workerid'], metadata['aid'], bonus):
                         #    total_bonus_issued += bonus
-        print 'worker_bonus'
-        print json.dumps(worker_bonus, sort_keys=True, indent=4, separators=(',', ': ') )
-        print "Issued {} in bonuses".format(total_bonus_issued)
+        #print 'worker_bonus'
+        #print json.dumps(worker_bonus, sort_keys=True, indent=4, separators=(',', ': ') )
+        #print "Issued {} in bonuses".format(total_bonus_issued)
 
     def show_medium_hard(self, taskid_earnings):
         for tasklet in taskid_earnings:
@@ -449,13 +453,13 @@ class TurkerResults:
             kwkey = ['easy', 'medium', 'hard', 'very_hard', 'priority'].index(kw)
             if len(filter(lambda x: x['payout'] >= x['amount'], taskid_earnings[tasklet].values())) > 0:
                 pass
-            print '{} [{}] {}: {}'.format(self.db.get_tasklet_program(tasklet), kwkey, kw, tasklet)
+            #print '{} [{}] {}: {}'.format(self.db.get_tasklet_program(tasklet), kwkey, kw, tasklet)
         sys.exit(1)
 
     def approve_single(self, hitid):
         xhit = self.MTconnection.get_hit(hitid)
         assignments = self.MTconnection.get_assignments(xhit[0].HITId)
-        print 'Verify data before proceeding'
+        #print 'Verify data before proceeding'
         pdb.set_trace()
         rc = self.MTconnection.approve_rejected_assignment(assignments[0].AssignmentId, feedback = "Thanks for participating, more similar tasks coming soon")
 
@@ -489,7 +493,7 @@ if __name__ == "__main__":
             tr.show_medium_hard(taskid_earnings)
         elif sys.argv[1] == 'stats':
             pprint (sorted(prog_maxcoverage.items(), key=operator.itemgetter(1)))
-            print "Average Coverage: {}".format(sum(prog_maxcoverage.values()) / float(len(prog_maxcoverage.keys())))
+            #print "Average Coverage: {}".format(sum(prog_maxcoverage.values()) / float(len(prog_maxcoverage.keys())))
         elif sys.argv[1] == 'seedstats':
             pprint(tr.get_seed_stats(seed_taskletid_solved))
     elif sys.argv[1] == 'showhit':

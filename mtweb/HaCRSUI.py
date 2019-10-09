@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-import ConfigParser
+import configparser
 import psycopg2
 import operator
 import uuid
@@ -51,7 +51,7 @@ def close_db(error):
     if hasattr(g, 'db'):
         g.db.close()
 
-@app.before_request
+#@app.before_request
 def force_https():
     if request.url.startswith('http:'):
         return flask.redirect("https{}".format(request.url[4:]), code=301)
@@ -438,11 +438,11 @@ def get_merged_interactions(programname, xid):
     influence = json.loads(get_printable_string(open('{}/{}.influence.json'.format(xdir,xid) ).read()))
     output = make_printable_string(open('{}/{}.output'.format(xdir, xid)).read())
     interactions = json.loads(get_printable_string(open('{}/{}.interaction.json'.format(xdir,xid)).read()))
-    print 'pulled {}/{}.interaction.json'.format(xdir, xid)
+    print('pulled {}/{}.interaction.json'.format(xdir, xid))
 
     #character_similarities = read_similarities_csv(open('{}/{}.character_similarities.csv'.format(xdir,xid)).read())
     compartments = json.loads(get_printable_string(open('{}/{}.compartment_information.json'.format(xdir, xid)).read()))
-    print 'pulled {}/{}.compartment_information.json'.format(xdir, xid)
+    print('pulled {}/{}.compartment_information.json'.format(xdir, xid))
 
     in_out_merge = {}
     try:
@@ -466,7 +466,7 @@ def get_merged_interactions(programname, xid):
         traceback.print_exc()
         raise
 
-    print 'dumping in_out_merge json'
+    #print 'dumping in_out_merge json'
     return json.dumps(in_out_merge)
 
 def flatten_tasklets(tasklets):

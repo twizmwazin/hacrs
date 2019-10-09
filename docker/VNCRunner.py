@@ -2,7 +2,7 @@
 
 # Cyborg Web Control
 
-import ConfigParser
+import configparser
 import subprocess
 import argparse
 import random
@@ -37,7 +37,7 @@ class VNCRunner:
 
     def get_config(self, conffile = 'config.ini'):
         try:
-            self.config = ConfigParser.ConfigParser()
+            self.config = configparser.configparser()
             self.config.readfp(open(conffile))
         except Exception as e:
             sys.stderr.write("Couldn't read config ({}): {}\n".format(conffile, e)) 
@@ -80,7 +80,7 @@ class VNCRunner:
         pwwrite.close()
 
         if self.cmdargs.interactive:
-            print 'WebSocket Port: {}'.format(self.useport)
+            #print 'WebSocket Port: {}'.format(self.useport)
             subprocess.call(dargs)
         else:
             subprocess.Popen(dargs, stderr = subprocess.PIPE, stdout = subprocess.PIPE)

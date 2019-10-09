@@ -27,7 +27,8 @@ class HaCRSTurker:
         self.db = HaCRSDB()
 
     def get_balance(self):
-        print self.MTconnection.get_account_balance()
+        #print self.MTconnection.get_account_balance()
+        pass
 
     def expire_all_hits(self):
         all_hits = self.MTconnection.get_all_hits()
@@ -36,14 +37,15 @@ class HaCRSTurker:
                 continue
             try:
                 self.MTconnection.expire_hit(hit.HITId)
-                print 'Expired HIT'
+                #print 'Expired HIT'
             except Exception as e:
-                print 'Could not expire: {}'.format(e)
+                #print 'Could not expire: {}'.format(e)
+                pass
 
     def delete_all_mturk_hits(self):
         all_hits = self.MTconnection.get_all_hits()
         for hit in all_hits:
-            print 'expire/dispose'
+            #print 'expire/dispose'
             self.MTconnection.expire_hit(hit.HITId)
             self.MTconnection.dispose_hit(hit.HITId)
 
@@ -67,7 +69,7 @@ class HaCRSTurker:
         elif keywords == 'priority':
             amount = 4.00
         else:
-            print 'Error'
+            #print 'Error'
             sys.exit(1)
 
         questionform = ExternalQuestion(url, frame_height)
@@ -100,7 +102,7 @@ class HaCRSTurker:
         sdescription = self.config.get('mturk', 'shortdescr')
 
         for tasklet in tasklets:
-            print 'pushing!'
+            #print 'pushing!'
 
             url = "https://cgcturk.hacked.jp/tasklet/{}/".format(tasklet['id'])
             keywords = ["easy"]
