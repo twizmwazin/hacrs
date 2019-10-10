@@ -1,8 +1,8 @@
 README.md
 setup.py
-docker/VNCRunner.py
-docker/__init__.py
-docker/cleanup.py
+docker_hacrs/VNCRunner.py
+docker_hacrs/__init__.py
+docker_hacrs/cleanup.py
 eyesore/_3_graph_renamer.py
 eyesore/__init__.py
 eyesore/constraint_helper.py

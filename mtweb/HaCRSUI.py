@@ -41,7 +41,7 @@ login_manager.login_view = "login"
 login_manager.init_app(app)
 
 sys.path.append('../docker/')
-from docker.VNCRunner import VNCRunner
+from docker_hacrs.VNCRunner import VNCRunner
 
 def get_db():
     if not hasattr(g, 'db'):
