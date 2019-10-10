@@ -9,10 +9,10 @@ import urllib
 import sys
 import textwrap
 sys.path.append('../mtutil/')
-from HaCRSUtil import HaCRSUtil
-from TurkerResults import TurkerResults
-from HaCRSTurker import HaCRSTurker
-from HaCRSDB import HaCRSDB
+from hacrs.mtutil.HaCRSUtil import HaCRSUtil
+from hacrs.mtutil.TurkerResults import TurkerResults
+from hacrs.mtutil.HaCRSTurker import HaCRSTurker
+from hacrs.mtutil.HaCRSDB import HaCRSDB
 from pprint import pprint
 from threading import Thread
 import time
@@ -33,13 +33,15 @@ import re
 import os
 from functools import wraps
 
+from pkg_resources import resource_string, resource_listdir, resource_stream
+
 
 login_manager = flask_login.LoginManager()
 login_manager.login_view = "login"
 login_manager.init_app(app)
 
 sys.path.append('../docker/')
-from VNCRunner import VNCRunner
+from hacrs.docker.VNCRunner import VNCRunner
 
 def get_db():
     if not hasattr(g, 'db'):
@@ -67,9 +69,14 @@ def vr_thread_runner(vr):
     vr.do_run()
 
 def do_render(template, data = {}):
-    data['header'] = open('static/_js.html').read()
-    data['internal_links'] = open('static/internal/_links.html').read()
-    return pystache.render(open(template).read(), data)
+    #data['header'] = open('.hacrs.mtweb.static/_js.html').read()
+	data['header'] = resource_stream('hacrs.mtweb', 'static/_js.html').read()
+
+    #data['internal_links'] = open('static/internal/_links.html').read()
+	data['internal_links'] = resource_stream('hacrs.mtweb', 'static/internal/_links.html').read()
+	template_file = resource_stream('hacrs.mtweb', template).read()
+	return pystache.render(template_file , data )
+
 
 class User(flask_login.UserMixin):
     pass

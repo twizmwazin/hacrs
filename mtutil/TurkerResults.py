@@ -13,9 +13,9 @@ import copy
 import pdb
 import sys
 import os
-from HaCRSUtil import HaCRSUtil
-from HaCRSDB import HaCRSDB
-from HaCRSTurker import HaCRSTurker
+from hacrs.mtutil.HaCRSUtil import HaCRSUtil
+from hacrs.mtutil.HaCRSDB import HaCRSDB
+from hacrs.mtutil.HaCRSTurker import HaCRSTurker
 
 
 # Cutoff for old tasklets / hits
