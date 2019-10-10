@@ -1,4 +1,4 @@
-from hacrs.mtweb.HaCRSUI import app
+from mtweb.HaCRSUI import app
 
 def main():
 	app.run(port=8182)

@@ -9,10 +9,10 @@ import urllib
 import sys
 import textwrap
 sys.path.append('../mtutil/')
-from hacrs.mtutil.HaCRSUtil import HaCRSUtil
-from hacrs.mtutil.TurkerResults import TurkerResults
-from hacrs.mtutil.HaCRSTurker import HaCRSTurker
-from hacrs.mtutil.HaCRSDB import HaCRSDB
+from mtutil.HaCRSUtil import HaCRSUtil
+from mtutil.TurkerResults import TurkerResults
+from mtutil.HaCRSTurker import HaCRSTurker
+from mtutil.HaCRSDB import HaCRSDB
 from pprint import pprint
 from threading import Thread
 import time
@@ -41,7 +41,7 @@ login_manager.login_view = "login"
 login_manager.init_app(app)
 
 sys.path.append('../docker/')
-from hacrs.docker.VNCRunner import VNCRunner
+from docker.VNCRunner import VNCRunner
 
 def get_db():
     if not hasattr(g, 'db'):
@@ -70,11 +70,11 @@ def vr_thread_runner(vr):
 
 def do_render(template, data = {}):
     #data['header'] = open('.hacrs.mtweb.static/_js.html').read()
-	data['header'] = resource_stream('hacrs.mtweb', 'static/_js.html').read()
+	data['header'] = resource_stream('mtweb', 'static/_js.html').read()
 
     #data['internal_links'] = open('static/internal/_links.html').read()
-	data['internal_links'] = resource_stream('hacrs.mtweb', 'static/internal/_links.html').read()
-	template_file = resource_stream('hacrs.mtweb', template).read()
+	data['internal_links'] = resource_stream('mtweb', 'static/internal/_links.html').read()
+	template_file = resource_stream('mtweb', template).read()
 	return pystache.render(template_file , data )
 
 

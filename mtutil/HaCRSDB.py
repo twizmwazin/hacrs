@@ -5,7 +5,7 @@ import json
 import pdb
 import sys
 import os
-from hacrs.mtutil.HaCRSUtil import HaCRSUtil
+from mtutil.HaCRSUtil import HaCRSUtil
 import random
 import hashlib
 import binascii
