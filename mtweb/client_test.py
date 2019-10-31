@@ -8,25 +8,26 @@ import glob
 import json
 import sys
 sys.path.append('../mtutil')
-from HaCRSTurker import HaCRSTurker
-import pdb
-import re
+# from HaCRSTurker import HaCRSTurker
+# import pdb
+# import re
 import os
 
+PORT = "8989"
 def create_programs():
-    url = 'http://localhost:8989/create_standard_programs'
+    url = 'http://localhost:' + PORT + '/create_standard_programs'
     r = requests.post(url)
-    print r.text
+    print(r.text)
 
 def create_seed_tasklet(program = 'CROMU_00008', transitions=2112, previous_transitions=0):
-    url = 'http://localhost:8989/create_tasklet/seed'
+    url = 'http://localhost:' + PORT + '/create_tasklet/seed'
     seed_data = {'programname': program,
                 'total_transitions': transitions,
                 'previous_transitions': previous_transitions
                 }
 
     r = requests.post(url, json=seed_data)
-    print r.text
+    print(r.text)
 
 def get_biggest_seed(fname):
     tar = tarfile.open(fname)
@@ -42,14 +43,14 @@ def get_biggest_seed(fname):
 def initial_seed_tasklets():
     programs = json.load(open('../json/bins.json'))
     for program in programs:
-        print program
+        print(program)
         info = json.load(open('/home/mw/cyborg/cyborg/hal/results/{}/latest.json'.format(program)))
         create_seed_tasklet(program, info['total_transitions'], info['previous_transitions'])
 
 def redo_seed_tasklets():
     programs = json.load(open('../json/bins.json'))
     for program in programs:
-        print program
+        print(program)
         info = json.load(open('/home/mw/cyborg/cyborg/hal/results/{}/latest.json'.format(program)))
         create_seed_tasklet(program, info['total_transitions'], info['previous_transitions'])
 

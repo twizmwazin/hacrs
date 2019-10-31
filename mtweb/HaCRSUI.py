@@ -123,6 +123,8 @@ def login():
 
 
     db = get_db()
+    # config_path = os.path.dirname(__file__) + "/webconfig.ini"
+    # config = HaCRSUtil.get_config(config_path)
     uname = flask.request.form['uname']
     pw = flask.request.form['pw']
     if db.authenticate_user(uname, pw):
@@ -181,12 +183,12 @@ def get_seeds(config, program):
         ret = []
         for f in rc:
             ret.append(open(f).read())
-        return urllib.quote( json.dumps( list(set(ret))) , safe='~@#$&()*!+=:;,.?/\'')
+        return urllib.parse.quote( json.dumps( list(set(ret))) , safe='~@#$&()*!+=:;,.?/\'')
     except Exception as e:
         return "[]"
 
 def urlescape(ret):
-    return urllib.quote( json.dumps( ret ) , safe='~@#$&()*!+=:;,.?/\'')
+    return urllib.parse.quote( json.dumps( ret ) , safe='~@#$&()*!+=:;,.?/\'')
 
 def get_interactions(config, program):
     try:
@@ -196,7 +198,7 @@ def get_interactions(config, program):
         for f in rc:
             m = re.match('.*minified_seeds/(.+)\.compartment_information\.json', f)
             ret.append(m.group(1))
-        return urllib.quote( json.dumps( list(set(ret))) , safe='~@#$&()*!+=:;,.?/\'')
+        return urllib.parse.quote( json.dumps( list(set(ret))) , safe='~@#$&()*!+=:;,.?/\'')
     except Exception as e:
         return "[]"
 
@@ -207,7 +209,7 @@ def get_afl_seeds(config, tasklet):
         for f in get_biggest_files(config, tasklet, glob.glob(tdir), 20):
             m = re.match('.*afl_seeds/(.+)\.output', f)
             ret.append(m.group(1))
-        return urllib.quote( json.dumps( list(set(ret))) , safe='~@#$&()*!+=:;,.?/\'')
+        return urllib.parse.quote( json.dumps( list(set(ret))) , safe='~@#$&()*!+=:;,.?/\'')
     except Exception as e:
         return "[]"
     return ret
@@ -228,7 +230,9 @@ def get_results(tid, assignmentid, workerid, hid):
             pass
             #render_me['payout_arr'] = tasklet['payout_arr']
 
-        config = HaCRSUtil.get_config('webconfig.ini')
+        config_path = os.path.dirname(__file__) + "/webconfig.ini"
+        config = HaCRSUtil.get_config(config_path)
+        # config = HaCRSUtil.get_config('webconfig.ini')
         xfile = HaCRSUtil.find_result_file(config, programname, key)
         results = json.loads(open(xfile).readlines()[-1])
         next_payout, next_transition = HaCRSUtil.get_next_payout_border(tasklet['payout_arr'], results['new_transitions'])
@@ -368,7 +372,9 @@ def showtid(tid, aid = None, hid=None, wid = None, showinput=None):
     try:
         assert len(tid) == 36
         db = get_db()
-        config = HaCRSUtil.get_config('webconfig.ini')
+        config_path = os.path.dirname(__file__) + "/webconfig.ini"
+        config = HaCRSUtil.get_config(config_path)
+        # config = HaCRSUtil.get_config('webconfig.ini')
         render_me = {}
         tasklet = db.get_full_tasklet(tid)
 
@@ -405,8 +411,9 @@ def showtid(tid, aid = None, hid=None, wid = None, showinput=None):
         render_me['programinstructions'] = get_printable_string(get_program_description(config, tasklet['program']))
         render_me['worker_id'] = wid
         render_me['taskname'] = HaCRSUtil.get_tasklet_name(tasklet)
-        render_me['instructions'] = open(instructions[tasklet['type']]).read()
-        render_me['showinput'] = urllib.quote(showinput)
+        # render_me['instructions'] = open(instructions[tasklet['type']]).read()
+        render_me['instructions'] = resource_stream('hacrs.mtweb', instructions[tasklet['type']]).read()
+        render_me['showinput'] = urllib.parse.quote(showinput)
 
         return do_render(templates[tasklet['type']], render_me)
     except Exception as e:
@@ -414,7 +421,7 @@ def showtid(tid, aid = None, hid=None, wid = None, showinput=None):
 
 def get_program_description(config, pname):
     ret = []
-    for line in open('../descriptions/{}.desc'.format(pname)).readlines():
+    for line in open('{}/{}.desc'.format(config.get('general', 'descriptionsfolder'), pname)).readlines():
         ret.append("\n".join(textwrap.wrap(line)))
     ret.append("\n")
     for line in open('{}/GENERAL_NOTE'.format(config.get('general', 'descriptionsfolder'))).readlines():
@@ -435,20 +442,23 @@ def find_compartment(compartments, character_idx):
 
 @app.route('/get_interaction/<programname>/<xid>')
 def get_merged_interactions(programname, xid):
-    config = HaCRSUtil.get_config('webconfig.ini')
+    config_path = os.path.dirname(__file__) + "/webconfig.ini"
+    config = HaCRSUtil.get_config(config_path)
+    # config = HaCRSUtil.get_config('webconfig.ini')
+    print('=========================== xid = ', xid)
     if xid.startswith('AUTO'):
         seed_dir = 'afl_seeds'
     else:
         seed_dir = 'minified_seeds'
     xdir = "{}/{}/{}".format(config.get('general', 'resultsdir'), programname.replace(' ', '_'), seed_dir)
 
-    influence = json.loads(get_printable_string(open('{}/{}.influence.json'.format(xdir,xid) ).read()))
-    output = make_printable_string(open('{}/{}.output'.format(xdir, xid)).read())
-    interactions = json.loads(get_printable_string(open('{}/{}.interaction.json'.format(xdir,xid)).read()))
+    influence = json.loads(get_printable_string(resource_stream('hacrs.mtweb', '{}/{}.influence.json'.format(xdir,xid)).read()))
+    output = make_printable_string(resource_stream('hacrs.mtweb', '{}/{}.output'.format(xdir, xid)).read())
+    interactions = json.loads(get_printable_string(resource_stream('hacrs.mtweb', '{}/{}.interaction.json'.format(xdir,xid)).read()))
     print('pulled {}/{}.interaction.json'.format(xdir, xid))
 
     #character_similarities = read_similarities_csv(open('{}/{}.character_similarities.csv'.format(xdir,xid)).read())
-    compartments = json.loads(get_printable_string(open('{}/{}.compartment_information.json'.format(xdir, xid)).read()))
+    compartments = json.loads(get_printable_string(resource_stream('hacrs.mtweb', '{}/{}.compartment_information.json'.format(xdir, xid)).read()))
     print('pulled {}/{}.compartment_information.json'.format(xdir, xid))
 
     in_out_merge = {}

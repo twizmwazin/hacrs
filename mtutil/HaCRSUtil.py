@@ -1,5 +1,5 @@
 
-#import configParser
+import configparser
 import subprocess
 import psycopg2
 import glob
@@ -18,7 +18,7 @@ class HaCRSUtil:
     @staticmethod
     def get_config(conffile = 'config.ini'):
         try:
-            config = ConfigParser.ConfigParser()
+            config = configparser.ConfigParser()
             config.readfp(open(conffile))
         except Exception as e:
             sys.stderr.write("Couldn't read config ({}): {}\n".format(conffile, e)) 

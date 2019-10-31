@@ -15,7 +15,8 @@ import binascii
 class HaCRSDB:
 
     def __init__(self):
-        self.config = HaCRSUtil.get_config('../config.ini')
+        config_path = os.path.dirname(__file__) + "/../config.ini"
+        self.config = HaCRSUtil.get_config(config_path)
         HOST = self.config.get('mturk','host')
         self.con, self.cur = HaCRSUtil.get_db(self.config)
         psycopg2.extras.register_uuid()
@@ -571,8 +572,8 @@ class HaCRSDB:
 
     def add_user(self, uname, password, utype, permissions):
         pwsalt = random.randint(0, 100000)
-        pwhash = binascii.hexlify( hashlib.pbkdf2_hmac('sha256', password, 'salt', pwsalt))
-        permissions = 'standard'
+        pwhash = password #binascii.hexlify( hashlib.pbkdf2_hmac('sha256', str.encode(password), b'salt', pwsalt))
+        permissions = 'admin'
         try:
             self.cur.execute("""insert into users
                                 (name, permissions, utype, pwsalt, pwhash) 
@@ -581,6 +582,7 @@ class HaCRSDB:
             self.con.commit()
             return self.cur.fetchone()[0]
         except Exception as e:
+            print(e)
             return None
 
     def load_user(self, uname):
@@ -621,19 +623,23 @@ class HaCRSDB:
 
 
     def authenticate_user(self, uname, password):
+        # return True
+
+
         self.cur.execute("""select permissions, utype, pwsalt, pwhash 
                             from users where name = %s; """, [ uname ] )
         res = self.cur.fetchone()
         if res == None:
             return None
         permissions, utype, pwsalt, pwhash = res
-
-        hashedinput = binascii.hexlify( hashlib.pbkdf2_hmac('sha256', password, 'salt', int(pwsalt)))
+        hmac = hashlib.pbkdf2_hmac('sha256', str.encode(password), b'salt', int(pwsalt))
+        hashedinput = password #binascii.hexlify( hmac )
 
         if hashedinput == pwhash:
             return True
 
         return None
+
 
 
     def log_session_start(self, tid, hitId, workerId, assignmentId, execution_id, user_agent, remote_addr):

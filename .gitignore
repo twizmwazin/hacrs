@@ -5,4 +5,5 @@ mtweb/results
 mtweb/pdescriptions
 mtweb/webconfig.ini
 hal/results
+.idea/*
 

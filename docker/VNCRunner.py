@@ -11,6 +11,7 @@ import time
 import pdb
 import sys
 import os
+from hacrs.mtutil.HaCRSUtil import HaCRSUtil
 
 class VNCRunner:
 
@@ -37,8 +38,11 @@ class VNCRunner:
 
     def get_config(self, conffile = 'config.ini'):
         try:
-            self.config = configparser.configparser()
-            self.config.readfp(open(conffile))
+            config_path = os.path.dirname(__file__) + "/../config.ini"
+            self.config = HaCRSUtil.get_config(config_path)
+            #self.config = configparser.configparser()
+            #self.config.readfp(open(conffile))
+            self.config.readfp(open(config_path))
         except Exception as e:
             sys.stderr.write("Couldn't read config ({}): {}\n".format(conffile, e)) 
             sys.exit(1)
@@ -67,7 +71,12 @@ class VNCRunner:
         assert( port_start < port_end )
 
         portrange = range(port_start, port_end)
-        random.shuffle(portrange)
+
+        # python3 does not support this:
+        # random.shuffle(portrange)
+
+        random.shuffle(list(portrange))
+
         for p in portrange:
             if self.port_available(p):
                 return p

@@ -1,28 +1,30 @@
 #!/usr/bin/env python
-from boto.mturk.connection import MTurkConnection
-from boto.mturk.question import ExternalQuestion, AnswerSpecification, QuestionForm, ValidatingXML, FreeTextAnswer, QuestionContent, FormattedContent, Question, Overview, SelectionAnswer
-from boto.mturk.price import Price
-from boto.mturk.qualification import Qualifications, PercentAssignmentsApprovedRequirement, Requirement, NumberHitsApprovedRequirement
-from pprint import pprint
-import operator
-import psycopg2
-import boto3
-import glob
-import shutil
+# from boto.mturk.connection import MTurkConnection
+# from boto.mturk.question import ExternalQuestion, AnswerSpecification, QuestionForm, ValidatingXML, FreeTextAnswer, QuestionContent, FormattedContent, Question, Overview, SelectionAnswer
+# from boto.mturk.price import Price
+# from boto.mturk.qualification import Qualifications, PercentAssignmentsApprovedRequirement, Requirement, NumberHitsApprovedRequirement
+# from pprint import pprint
+# import operator
+# import psycopg2
+# import boto3
+# import glob
+# import shutil
 import json
-import pdb
+# import pdb
 import sys
-import os
+# import os
+
 sys.path.append('../mtutil/')
-from HaCRSUtil import HaCRSUtil
-from HaCRSDB import HaCRSDB
-from HaCRSTurker import HaCRSTurker
+from hacrs.mtutil.HaCRSUtil import HaCRSUtil
+from hacrs.mtutil.HaCRSDB import HaCRSDB
+from hacrs.mtutil.HaCRSTurker import HaCRSTurker
 from flask import Flask, request
 from flask import g
 app = Flask(__name__)
 from werkzeug.contrib.fixers import ProxyFix
+import os
 app.wsgi_app = ProxyFix(app.wsgi_app)
-import pystache
+# import pystache
 
 # Administrative web API
 # Create and query programs and tasklets and/or push tasklets
@@ -50,7 +52,9 @@ def get_db():
 
 def get_config():
     if not hasattr(g, 'config'):
-        g.config = HaCRSUtil.get_config('../config.ini')
+        config_path = os.path.dirname(__file__) + "/../config.ini"
+        g.config = HaCRSUtil.get_config(config_path)
+        # g.config = HaCRSUtil.get_config('../config.ini')
     return g.config
 
 def get_mt():
@@ -78,10 +82,10 @@ def create_standard_programs():
             pid = db.lookup_program(program)
             if not pid:
                 pid = db.create_program(program)
-                print 'Created program {} with ID {}'.format(program, pid)
+                print('Created program ' + str(program) + ' with ID ' + str(pid))
         return json.dumps({'status': 'OK'})
     except Exception as e:
-        raise InvalidUsage()
+        raise e #InvalidUsage()
 
 
 @app.route("/create_tasklet/seed", methods=['POST'])
