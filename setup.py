@@ -18,7 +18,7 @@ except ImportError:
 setup(
     name="hacrs",
     version="0.0.1",
-    python_requires=">=3.7",
+    python_requires=">=3.5",
     packages=packages,
     install_requires=[
         'flask',
