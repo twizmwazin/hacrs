@@ -15,9 +15,9 @@ import sys
 # import os
 
 sys.path.append('../mtutil/')
-from hacrs.mtutil.HaCRSUtil import HaCRSUtil
-from hacrs.mtutil.HaCRSDB import HaCRSDB
-from hacrs.mtutil.HaCRSTurker import HaCRSTurker
+from mtutil.HaCRSUtil import HaCRSUtil
+from mtutil.HaCRSDB import HaCRSDB
+from mtutil.HaCRSTurker import HaCRSTurker
 from flask import Flask, request
 from flask import g
 app = Flask(__name__)

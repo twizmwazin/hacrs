@@ -9,10 +9,10 @@ import urllib
 import sys
 import textwrap
 sys.path.append('../mtutil/')
-from hacrs.mtutil.HaCRSUtil import HaCRSUtil
-from hacrs.mtutil.TurkerResults import TurkerResults
-from hacrs.mtutil.HaCRSTurker import HaCRSTurker
-from hacrs.mtutil.HaCRSDB import HaCRSDB
+from mtutil.HaCRSUtil import HaCRSUtil
+from mtutil.TurkerResults import TurkerResults
+from mtutil.HaCRSTurker import HaCRSTurker
+from mtutil.HaCRSDB import HaCRSDB
 from pprint import pprint
 from threading import Thread
 import time
@@ -41,7 +41,7 @@ login_manager.login_view = "login"
 login_manager.init_app(app)
 
 sys.path.append('../docker/')
-from hacrs.docker.VNCRunner import VNCRunner
+from docker.VNCRunner import VNCRunner
 
 def get_db():
     if not hasattr(g, 'db'):
@@ -69,12 +69,12 @@ def vr_thread_runner(vr):
     vr.do_run()
 
 def do_render(template, data = {}):
-    #data['header'] = open('.hacrs.mtweb.static/_js.html').read()
-	data['header'] = resource_stream('hacrs.mtweb', 'static/_js.html').read()
+    #data['header'] = open('.mtweb.static/_js.html').read()
+	data['header'] = resource_stream('mtweb', 'static/_js.html').read()
 
     #data['internal_links'] = open('static/internal/_links.html').read()
-	data['internal_links'] = resource_stream('hacrs.mtweb', 'static/internal/_links.html').read()
-	template_file = resource_stream('hacrs.mtweb', template).read()
+	data['internal_links'] = resource_stream('mtweb', 'static/internal/_links.html').read()
+	template_file = resource_stream('mtweb', template).read()
 	return pystache.render(template_file , data )
 
 
@@ -412,7 +412,7 @@ def showtid(tid, aid = None, hid=None, wid = None, showinput=None):
         render_me['worker_id'] = wid
         render_me['taskname'] = HaCRSUtil.get_tasklet_name(tasklet)
         # render_me['instructions'] = open(instructions[tasklet['type']]).read()
-        render_me['instructions'] = resource_stream('hacrs.mtweb', instructions[tasklet['type']]).read()
+        render_me['instructions'] = resource_stream('mtweb', instructions[tasklet['type']]).read()
         render_me['showinput'] = urllib.parse.quote(showinput)
 
         return do_render(templates[tasklet['type']], render_me)
@@ -452,13 +452,13 @@ def get_merged_interactions(programname, xid):
         seed_dir = 'minified_seeds'
     xdir = "{}/{}/{}".format(config.get('general', 'resultsdir'), programname.replace(' ', '_'), seed_dir)
 
-    influence = json.loads(get_printable_string(resource_stream('hacrs.mtweb', '{}/{}.influence.json'.format(xdir,xid)).read()))
-    output = make_printable_string(resource_stream('hacrs.mtweb', '{}/{}.output'.format(xdir, xid)).read())
-    interactions = json.loads(get_printable_string(resource_stream('hacrs.mtweb', '{}/{}.interaction.json'.format(xdir,xid)).read()))
+    influence = json.loads(get_printable_string(resource_stream('mtweb', '{}/{}.influence.json'.format(xdir,xid)).read()))
+    output = make_printable_string(resource_stream('mtweb', '{}/{}.output'.format(xdir, xid)).read())
+    interactions = json.loads(get_printable_string(resource_stream('mtweb', '{}/{}.interaction.json'.format(xdir,xid)).read()))
     print('pulled {}/{}.interaction.json'.format(xdir, xid))
 
     #character_similarities = read_similarities_csv(open('{}/{}.character_similarities.csv'.format(xdir,xid)).read())
-    compartments = json.loads(get_printable_string(resource_stream('hacrs.mtweb', '{}/{}.compartment_information.json'.format(xdir, xid)).read()))
+    compartments = json.loads(get_printable_string(resource_stream('mtweb', '{}/{}.compartment_information.json'.format(xdir, xid)).read()))
     print('pulled {}/{}.compartment_information.json'.format(xdir, xid))
 
     in_out_merge = {}

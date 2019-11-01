@@ -8,8 +8,8 @@ import json
 import pdb
 import sys
 import os
-from hacrs.mtutil.HaCRSUtil import HaCRSUtil
-from hacrs.mtutil.HaCRSDB import HaCRSDB
+from mtutil.HaCRSUtil import HaCRSUtil
+from mtutil.HaCRSDB import HaCRSDB
 
 class HaCRSTurker:
 

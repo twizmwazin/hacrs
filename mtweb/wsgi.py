@@ -5,11 +5,11 @@ USER = 0
 MODE = USER
 def main(mode=0):
 	if mode == USER:
-		from hacrs.mtweb.HaCRSUI import app
+		from mtweb.HaCRSUI import app
 		print("USER Mode")
 		app.run(port=8182)
 	elif mode == ADMIN:
-		from hacrs.mtweb.HaCRSAdmin import app
+		from mtweb.HaCRSAdmin import app
 		print("ADMIN Mode")
 		app.run(port=8989)
 
