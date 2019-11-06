@@ -1,3 +1,7 @@
+#from HaCRSUI import app
+#app.run(host="0.0.0.0", port=8182)
+
+'''
 import sys
 
 ADMIN = 1
@@ -6,12 +10,14 @@ MODE = USER
 def main(mode=0):
 	if mode == USER:
 		from mtweb.HaCRSUI import app
-		print("USER Mode")
-		app.run(port=8182)
+		#print("USER Mode")
+		#app.run(port=8182)
+		app.run(host="0.0.0.0", port=8182)
 	elif mode == ADMIN:
 		from mtweb.HaCRSAdmin import app
 		print("ADMIN Mode")
-		app.run(port=8989)
+		#app.run(port=8989)
+		app.run(host="0.0.0.0", port=8989)
 
 if __name__ == "__main__":
 	arguments = sys.argv
@@ -23,4 +29,4 @@ if __name__ == "__main__":
 			main(USER)
 
     #app.run(port=8182)
-
+'''
