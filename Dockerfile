@@ -2,7 +2,6 @@ FROM python:3.7.4
 MAINTAINER Tariq M Nasim <tnasim@asu.edu>
 
 # Create the group and user to be used in this container
-#RUN groupadd flaskgroup && useradd -m -g flaskgroup -s /bin/bash flask
 RUN groupadd hacrsgroup && useradd -m -g hacrsgroup -s /bin/bash hacrs
 
 # Create the working directory (and set it as the working directory)
