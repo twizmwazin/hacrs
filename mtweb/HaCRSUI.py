@@ -149,8 +149,8 @@ def admin_required(f):
     return decorated_function
 
 @app.route('/internal/add_user', methods=['GET', 'POST'])
-#@flask_login.login_required
-#@admin_required
+@flask_login.login_required
+@admin_required
 def add_user():
     if flask.request.method == 'GET':
         render_me = {}
@@ -166,6 +166,18 @@ def add_user():
     utype = 'standard'
     added = db.add_user(uname, pw, utype, permissions)
     return 'Added User: {}'.format(added)
+
+@app.route('/create_admin')
+def create_admin():
+    db = get_db()
+	users = db.show_all_users()
+	if len(users) == 0:		
+		uname = 'admin'
+		pw = 'admin'
+		permissions = 'standard'
+		utype = 'admin'
+		added = db.add_user(uname, pw, utype, permissions)
+	return flask.redirect(flask.url_for('root'))
 
 @app.route('/logout')
 def logout():
