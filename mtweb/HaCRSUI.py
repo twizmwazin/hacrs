@@ -170,14 +170,14 @@ def add_user():
 @app.route('/create_admin')
 def create_admin():
     db = get_db()
-	users = db.show_all_users()
-	if len(users) == 0:		
-		uname = 'admin'
-		pw = 'admin'
-		permissions = 'standard'
-		utype = 'admin'
-		added = db.add_user(uname, pw, utype, permissions)
-	return flask.redirect(flask.url_for('root'))
+    users = db.show_all_users()
+    if len(users) == 0:		
+        uname = 'admin'
+        pw = 'admin'
+        permissions = 'standard'
+        utype = 'admin'
+        added = db.add_user(uname, pw, utype, permissions)
+    return flask.redirect(flask.url_for('root'))
 
 @app.route('/logout')
 def logout():
