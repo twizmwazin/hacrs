@@ -137,3 +137,6 @@ create table notes (
     timestamp           TIMESTAMP WITH TIME ZONE NOT NULL default now(),
     text                varchar(10000)
 );
+
+-- Insert some initial data:
+insert into users(id, name, permissions, utype, pwsalt, pwhash) values (1, 'admin', 'standard', 'admin', 12345, 'admin');
